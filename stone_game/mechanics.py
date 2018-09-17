@@ -18,10 +18,11 @@ class Mechanics(object):
     [2, 10,18], [4, 12,20], [6, 14,22], [8, 16,24]  # cross mills
   ]
 
-  def __init__(self, player1, player2):
+  def __init__(self, player1, player2, drawing=False):
     self.turn_counter = 0
     self.player1 = player1
     self.player2 = player2
+    self.drawing = drawing
 
   def place_piece(self, board, piece, at):
     """
@@ -40,7 +41,8 @@ class Mechanics(object):
         print('%s made a mill!' % player)
         print('~~~STEALING UNIMPLEMENTED~~~')
     self.turn_counter += 1
-    board.draw()
+    if self.drawing:
+      board.draw()
 
   def move_piece(self, board, at, to):
     """
@@ -66,7 +68,8 @@ class Mechanics(object):
       print('%s made a mill!' % player)
       print('~~~STEALING UNIMPLEMENTED~~~')
     self.turn_counter += 1
-    board.draw()
+    if self.drawing:
+      board.draw()
 
   def available_moves(self, board, player):
     """

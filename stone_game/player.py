@@ -1,4 +1,4 @@
-from piece import Piece, StoneStates
+from .piece import Piece, StoneState
 
 
 class Player(object):
@@ -27,7 +27,7 @@ class Player(object):
     """
     ret = []
     for piece in self.reserves:
-      if piece.state == StoneStates.IN_PLAY:
+      if piece.state == StoneState.IN_PLAY:
         ret.append(piece)
     return ret
 
@@ -36,6 +36,6 @@ class Player(object):
     get a piece that has not been placed yet
     """
     for piece in self.reserves:
-      if piece.state == StoneStates.UNPLACED:
+      if piece.state == StoneState.UNPLACED:
         return piece
     return None

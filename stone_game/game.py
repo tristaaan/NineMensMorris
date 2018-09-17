@@ -1,6 +1,6 @@
-from board import Board
-from mechanics import Mechanics
-from player import Player
+from .board import Board
+from .mechanics import Mechanics
+from .player import Player
 
 
 class Game(object):
@@ -10,7 +10,7 @@ class Game(object):
     self.player2 = Player('Player2', '◉')
 
     self.board = Board()
-    self.mechanics = Mechanics(self.player1, self.player2)
+    self.mechanics = Mechanics(self.player1, self.player2, drawing=True)
 
   def begin(self):
     # PLACE PHASE
@@ -42,8 +42,3 @@ class Game(object):
       except ValueError as e:
         print(e)
         continue
-
-
-if __name__ == '__main__':
-  g = Game()
-  g.begin()

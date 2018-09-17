@@ -1,4 +1,5 @@
-from piece import Piece
+from .piece import Piece
+
 
 class Node(object):
   """
@@ -40,7 +41,7 @@ class Board(object):
     self.add_node(13, [12,14])
     self.add_node(15, [14,16])
 
-    self.add_node(17, [18,24])
+    self.add_node(17, [18, 24])
     self.add_node(19, [18,20])
     self.add_node(21, [20,22])
     self.add_node(23, [22,24])
@@ -65,6 +66,7 @@ class Board(object):
     if self.nodes[at].piece == None:
       raise ValueError('There is no piece on %d' % at)
     piece = self.nodes[at].piece
+    piece.position = 0
     self.nodes[at].piece = None
     return piece
 

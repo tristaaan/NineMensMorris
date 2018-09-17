@@ -1,6 +1,6 @@
 
 
-class StoneStates(object):
+class StoneState(object):
   """
   Constants for the stone states
   """
@@ -19,7 +19,7 @@ class Piece(object):
   """
   icon = ''
   owner = None
-  state = StoneStates.UNPLACED
+  state = StoneState.UNPLACED
   position = 0
 
   def __init__(self, player_name, piece_icon):
@@ -44,11 +44,11 @@ class Piece(object):
     at: the new position of the node
     """
     self.position = at
-    self.state = StoneStates.IN_PLAY
+    self.state = StoneState.IN_PLAY
 
   def remove_from_play(self):
     """
     Sets the piece to the CAPTURED state, sets position to 0
     """
     self.position = 0
-    self.state = StoneStates.CAPTURED
+    self.state = StoneState.CAPTURED
