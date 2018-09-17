@@ -1,14 +1,21 @@
 from piece import Piece
 
-
 class Node(object):
+  """
+  A simple node object for the board
+  piece: Piece
+  edges: array of numbers
+  """
   piece = None
   def __init__(self, edges):
     self.edges = edges
 
 
 class Board(object):
-
+  """
+  A board for the game
+  node: a graph of Node objects
+  """
   def __init__(self):
     self.nodes = {}
     for i in range(1,25):
@@ -39,6 +46,11 @@ class Board(object):
     self.add_node(23, [22,24])
 
   def add_piece(self, piece, to):
+    """
+    Adds a piece to the board
+    piece: Piece
+    to: the name of the node in self.nodes to add piece to
+    """
     if self.nodes[to].piece != None:
       raise ValueError('A piece is already on %d' % to)
     piece.position = to
@@ -46,6 +58,10 @@ class Board(object):
     self.nodes[to].piece.set_active(to)
 
   def remove_piece(self, at):
+    """
+    Removes a piece from the board
+    at: name of the node in self.nodes to remove the piece from
+    """
     if self.nodes[at].piece == None:
       raise ValueError('There is no piece on %d' % at)
     piece = self.nodes[at].piece
@@ -53,22 +69,26 @@ class Board(object):
     return piece
 
   def get_piece(self, at):
+    """
+    Get piece from a specific spot on the board
+    at: name of the node to fetch the piece from
+    """
     return self.nodes[at].piece
 
-  def get_pieces(self, at=[], belonging_to=''):
+  def get_pieces(self, at):
+    """
+    Query multiple pieces from the board
+    at: array of names referencing nodes on the board
+    """
     ret = []
-    if len(belonging_to) > 0:
-      for i in range(1,25):
-        if self.nodes[i].piece != None and \
-          self.nodes[i].piece.owner == belonging_to:
-          ret.append(self.nodes[i].piece)
-      return ret
-
     for pos in at:
       ret.append(self.nodes[pos].piece)
     return ret
 
   def open_spots(self):
+    """
+    Fetch available nodes to add pieces to
+    """
     ret = []
     for i in range(1,25):
       if self.nodes[i].piece == None:
@@ -76,9 +96,17 @@ class Board(object):
     return ret
 
   def add_node(self, name, edges):
+    """
+    Add node to board, ideally this should be in a graph class
+    name: name of node, this will be its key
+    edges: array of names
+    """
     self.nodes[name] = Node(edges)
 
   def draw(self):
+    """
+    Print out the board
+    """
     print('%s---------%s---------%s' % (self.piece_str(1), self.piece_str(2), self.piece_str(3)))
     print('|         |         |')
     print('|  %s------%s------%s  |' % (self.piece_str(9), self.piece_str(10), self.piece_str(11)))
@@ -95,6 +123,10 @@ class Board(object):
     print('%s---------%s---------%s' % (self.piece_str(7), self.piece_str(6), self.piece_str(5)))
 
   def piece_str(self, at):
+    """
+    Print the icon of just a single piece at a node
+    at: the name of the node
+    """
     if self.nodes[at].piece == None:
       return '☐'
     return self.nodes[at].piece.icon

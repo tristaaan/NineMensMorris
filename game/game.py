@@ -25,7 +25,7 @@ class Game(object):
 
     # MOVE PHASE
     print('move phase')
-    while self.player1.remaining() > 2 and self.player2.remaining() > 2 and \
+    while len(self.player1.remaining()) > 2 and len(self.player2.remaining()) > 2 and \
       len(self.mechanics.available_moves(self.board, active_player)) != 0:
       active_player = self.mechanics.active_player()
       print('---- Turn %d ----' % self.mechanics.turn_counter)

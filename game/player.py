@@ -2,7 +2,12 @@ from piece import Piece, StoneStates
 
 
 class Player(object):
-
+  """
+  A container for pieces and the player name
+  name: the player's name
+  icon: the piece icons
+  reserves: an array of Pieces, initialized in the constructor
+  """
   def __init__(self, name, icon):
     self.name = name
     self.icon = icon
@@ -11,16 +16,25 @@ class Player(object):
       self.reserves.append(Piece(self.name, self.icon))
 
   def __str__(self):
+    """
+    What to show when this is in a print()
+    """
     return self.name
 
   def remaining(self):
-    val = 0
+    """
+    Get a list of the pieces that are still in play
+    """
+    ret = []
     for piece in self.reserves:
       if piece.state == StoneStates.IN_PLAY:
-        val += 1
-    return val
+        ret.append(piece)
+    return ret
 
   def inactive_piece(self):
+    """
+    get a piece that has not been placed yet
+    """
     for piece in self.reserves:
       if piece.state == StoneStates.UNPLACED:
         return piece
