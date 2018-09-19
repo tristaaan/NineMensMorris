@@ -39,7 +39,7 @@ class Mechanics(object):
     player = self.active_player().name
     if self.mill_check(board, at):
         print('%s made a mill!' % player)
-        print('~~~STEALING UNIMPLEMENTED~~~')
+        self.steal_piece(board)
     self.turn_counter += 1
     if self.drawing:
       board.draw()
@@ -66,7 +66,7 @@ class Mechanics(object):
 
     if self.mill_check(board, to):
       print('%s made a mill!' % player)
-      print('~~~STEALING UNIMPLEMENTED~~~')
+      self.steal_piece(board)
     self.turn_counter += 1
     if self.drawing:
       board.draw()
@@ -85,6 +85,27 @@ class Mechanics(object):
       ret = ret | open_spots
     return ret
 
+  def available_at(self,board,player):
+    """
+    returns the available pieces that can be moved
+    """
+    available_pieces = player.remaining()
+    ret = set()
+    for p in available_pieces:
+      adjacent = board.nodes[p.position].edges
+      moveable_pieces = {p for a in adjacent if board.get_piece(a) == None}
+      ret = ret | moveable_pieces
+    return ret
+
+  def available_to(self,board,at):
+    """
+    returns the open spots for at to be moved to
+    """
+    adjacent = board.nodes[at.position].edges
+    open_spots = {a for a in adjacent if board.get_piece(a) == None}
+    return open_spots
+
+
   def mill_check(self, board, at):
     """
     Check for a mill given a piece
@@ -100,6 +121,31 @@ class Mechanics(object):
         continue
     return False
 
+  def steal_piece(self, board):
+    """
+    Removes a piece from the inactive_player
+    """
+    enemy_pieces = self.inactive_player().remaining()
+    pieces_not_in_mill = {a for a in enemy_pieces if not self.mill_check(board, a)}
+    if not len(pieces_not_in_mill) == 0:
+      positions = {p.position for p in pieces_not_in_mill}
+      print ("Remove one of the following pieces:", positions)
+      piece_to_remove = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece', positions)
+      piece = board.get_piece(piece_to_remove)
+      piece.remove_from_play()
+      board.remove_piece(piece_to_remove)
+      return
+
+    pieces_in_mill = {a for a in enemy_pieces if self.mill_check(board, a)}
+    positions2 = {p.position for p in pieces_in_mill}
+    print("Remove one of the following pieces:", positions2)
+    piece_to_remove2 = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece',
+                                      positions2)
+    piece = board.get_piece(piece_to_remove2)
+    piece.remove_from_play()
+    board.remove_piece(piece_to_remove2)
+    return
+
   def active_player(self):
     """
     Get the active player
@@ -107,3 +153,27 @@ class Mechanics(object):
     if self.turn_counter % 2 == 0:
       return self.player1
     return self.player2
+
+  def inactive_player(self):
+    """
+    Get the inactive player
+    """
+    if self.turn_counter % 2 == 0:
+      return self.player2
+    return self.player1
+
+  def take_input(self, text, error, valid_ints):
+    while(1):
+      try:
+        inp = int(input(text))
+        if inp in valid_ints:
+          return inp
+        raise ValueError(error)
+      except ValueError as error:
+        print(error)
+        continue
+      except:
+        print('Thats not a number')
+        continue
+
+

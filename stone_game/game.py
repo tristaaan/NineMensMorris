@@ -20,8 +20,8 @@ class Game(object):
       active_player = self.mechanics.active_player()
       current_piece = active_player.inactive_piece()
       print('%s\'s turn' % active_player)
-      spot = int(input('Place piece:'))
-      self.mechanics.place_piece(self.board, current_piece, spot)
+      spot = self.take_input('Place piece: ','You cannot place there', self.board.open_spots())
+      self.mechanics.place_piece(self.board, current_piece,spot)
 
     # MOVE PHASE
     print('move phase')
@@ -29,16 +29,26 @@ class Game(object):
       len(self.mechanics.available_moves(self.board, active_player)) != 0:
       active_player = self.mechanics.active_player()
       print('---- Turn %d ----' % self.mechanics.turn_counter)
-      possible_moves = self.mechanics.available_moves(self.board, active_player)
+      possible_moves = self.mechanics.available_at(self.board, active_player)
       print('Available moves: ', possible_moves)
       print('%s\'s turn' % active_player)
-      current_piece
-      at = int(input('Move piece at:'))
-      to = int(input('           to:'))
+
+      at = self.take_input('Move piece at: ', 'You cannot move that piece', possible_moves)
+      to = self.take_input('Move piece to: ', 'You cannot move there', self.mechanics.available_to(self.board, at))
+      self.mechanics.move_piece(self.board, at, to)
+
+
+  def take_input(self, text, error, valid_ints):
+    while(1):
       try:
-        if to not in possible_moves:
-          raise ValueError('You cannot move that piece at %d' % at)
-        self.mechanics.move_piece(self.board, at, to)
-      except ValueError as e:
-        print(e)
+        inp = int(input(text))
+        if inp in valid_ints:
+          return inp
+        raise ValueError(error)
+        break
+      except ValueError as error:
+        print(error)
+        continue
+      except:
+        print('Thats not a number')
         continue
