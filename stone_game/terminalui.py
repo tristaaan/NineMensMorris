@@ -185,15 +185,27 @@ def draw_board(board):
     board: the board to draw
     """
 
-    draw_box(0, 0, 16, 16)
-    draw_box(3, 3, 13, 13)
-    draw_box(6, 6, 10, 10)
-    draw_h_line(0, 6, 8, includeEdges = False)
-    draw_h_line(10, 16, 8, includeEdges = False)
-    draw_v_line(8, 0, 6, includeEdges = False)
-    draw_v_line(8, 10, 16, includeEdges = False)
+    draw_box(1, 1, 33, 17)
+    draw_box(7, 4, 27, 14)
+    draw_box(13, 7, 21, 11)
+    draw_h_line(1, 13, 9, includeEdges = False)
+    draw_h_line(21, 33, 9, includeEdges = False)
+    draw_v_line(17, 1, 7, includeEdges = False)
+    draw_v_line(17, 11, 17, includeEdges = False)
 
     for i in range(1, 24 + 1):
+        x = max(-1, min(1, 2 - abs(i % 8 - 4)))
+        y = max(-1, min(1, abs((i + 2) % 8 - 4) - 2))
+        d = [8, 5, 2][(i - 1) // 8]
+
+        number_x = 17 + (2 * d + 1) * x
+        number_y = 9 + (d + 1) * y
+        if x < 0 and i >= 10:
+            number_x -= 1
+        if i >= 9 and i % 4 == 0:
+            number_y -= 1
+        draw_string(number_x, number_y, str(i))
+
         piece = board.get_piece(i)
         if piece:
             # Calculates the x & y coordinates by using
@@ -202,7 +214,9 @@ def draw_board(board):
             y = max(-1, min(1, abs((i + 2) % 8 - 4) - 2))
             d = [8, 5, 2][(i - 1) // 8]
 
-            draw_string(8 + d * x, 8 + d * y, piece.icon)
+            icon_x = 17 + 2 * d * x
+            icon_y = 9 + d * y
+            draw_string(icon_x, icon_y, piece.icon)
 
 def _expand_buffer(new_w, new_h):
     w = len(_buffer[0]) if _buffer else 0
