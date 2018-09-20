@@ -53,27 +53,19 @@ class Game(object):
     Removes a piece from the enemy player
     """
     enemy_pieces = self.mechanics.inactive_player().remaining()
-    print(enemy_pieces)
-    pieces_not_in_mill = set()
-    for a in enemy_pieces:
-      if not self.mechanics.mill_check(self.board, a, self.mechanics.inactive_player()):
-        pieces_not_in_mill = pieces_not_in_mill | {a}
-    #pieces_not_in_mill = {a for a in enemy_pieces if not self.mechanics.mill_check(self.board, a, self.mechanics.inactive_player())}
-    print(pieces_not_in_mill)
+    pieces_not_in_mill = {a.position for a in enemy_pieces if not self.mechanics.mill_check(self.board, a.position, self.mechanics.inactive_player())}
     if not len(pieces_not_in_mill) == 0:
-      positions = {p.position for p in pieces_not_in_mill}
-      print ("Remove one of the following pieces:", positions)
-      piece_to_remove = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece', positions)
+      print ("Remove one of the following pieces:", pieces_not_in_mill)
+      piece_to_remove = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece', pieces_not_in_mill)
       piece = self.board.get_piece(piece_to_remove)
       piece.remove_from_play()
       self.board.remove_piece(piece_to_remove)
       return
 
-    pieces_in_mill = {a for a in enemy_pieces if self.mechanics.mill_check(self.board, a, self.mechanics.inactive_player())}
-    positions2 = {p.position for p in pieces_in_mill}
-    print("Remove one of the following pieces:", positions2)
+    pieces_in_mill = {a.position for a in enemy_pieces if self.mechanics.mill_check(self.board, a.position, self.mechanics.inactive_player())}
+    print("Remove one of the following pieces:", pieces_in_mill)
     piece_to_remove2 = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece',
-                                      positions2)
+                                      pieces_in_mill)
     piece = self.board.get_piece(piece_to_remove2)
     piece.remove_from_play()
     self.board.remove_piece(piece_to_remove2)
