@@ -1,3 +1,12 @@
+"""
+An interface for positional printing and box-drawing in the console.
+
+This interface has an internal buffer that can be drawed to using the ``draw_*`` functions,
+the buffer can then be printed to the console using ``output_buffer``. The buffer can also be cleared
+using the ``clear`` function.
+"""
+
+
 # The drawing buffer is represented as a two-dimensional array.
 # Each cell can contain
 # - None meaning the cell is empty and will be drawn as a single space
