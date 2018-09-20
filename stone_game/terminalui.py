@@ -1,15 +1,15 @@
-buffer = []
+_buffer = []
 
 def clear():
-    global buffer
-    buffer = []
+    global _buffer
+    _buffer = []
 
 def output_buffer():
-    for l in buffer:
+    for l in _buffer:
         line = ""
         for c in l:
             if type(c) == int:
-                c = lineChars[c]
+                c = _lineChars[c]
                 if c:
                     line += c
                 else:
@@ -21,53 +21,53 @@ def output_buffer():
         print(line)
 
 def draw_box(x1, y1, x2, y2):
-    expand_buffer(x2 + 1, y2 + 1)
+    _expand_buffer(x2 + 1, y2 + 1)
 
     for x in range(x1 + 1, x2):
-        _add_line_part(x, y1, left | right)
-        _add_line_part(x, y2, left | right)
+        _add_line_part(x, y1, _left | _right)
+        _add_line_part(x, y2, _left | _right)
 
     for y in range(y1 + 1, y2):
-        _add_line_part(x1, y, up | down)
-        _add_line_part(x2, y, up | down)
+        _add_line_part(x1, y, _up | _down)
+        _add_line_part(x2, y, _up | _down)
 
-    _add_line_part(x1, y1, right | down)
-    _add_line_part(x2, y1, left  | down)
-    _add_line_part(x1, y2, right | up)
-    _add_line_part(x2, y2, left  | up)
+    _add_line_part(x1, y1, _right | _down)
+    _add_line_part(x2, y1, _left  | _down)
+    _add_line_part(x1, y2, _right | _up)
+    _add_line_part(x2, y2, _left  | _up)
 
 def draw_h_line(x1, x2, y, includeEdges = True):
-    expand_buffer(x2 + 1, y + 1)
+    _expand_buffer(x2 + 1, y + 1)
 
     if includeEdges:
-        _add_line_part(x1, y, left | right)
-        _add_line_part(x2, y, left | right)
+        _add_line_part(x1, y, _left | _right)
+        _add_line_part(x2, y, _left | _right)
     else:
-        _add_line_part(x1, y, right)
-        _add_line_part(x2, y, left)
+        _add_line_part(x1, y, _right)
+        _add_line_part(x2, y, _left)
 
     for x in range(x1 + 1, x2):
-        _add_line_part(x, y, left | right)
+        _add_line_part(x, y, _left | _right)
 
 def draw_v_line(x, y1, y2, includeEdges = True):
-    expand_buffer(x + 1, y2 + 1)
+    _expand_buffer(x + 1, y2 + 1)
 
     if includeEdges:
-        _add_line_part(x, y1, up | down)
-        _add_line_part(x, y2, up | down)
+        _add_line_part(x, y1, _up | _down)
+        _add_line_part(x, y2, _up | _down)
     else:
-        _add_line_part(x, y1, down)
-        _add_line_part(x, y2, up)
+        _add_line_part(x, y1, _down)
+        _add_line_part(x, y2, _up)
 
     for y in range(y1 + 1, y2):
-        _add_line_part(x, y, up | down)
+        _add_line_part(x, y, _up | _down)
 
 def draw_string(x, y, string, w = None, h = None, line_wrap = False):
     if w or h:
-        expand_buffer(w or 0, h or 0)
+        _expand_buffer(w or 0, h or 0)
 
-    w = w or len(buffer)
-    h = h or (buffer and len(buffer) or 0)
+    w = w or len(_buffer)
+    h = h or (_buffer and len(_buffer) or 0)
 
     if x < w:
         start_x = x
@@ -81,7 +81,7 @@ def draw_string(x, y, string, w = None, h = None, line_wrap = False):
                 if y >= h:
                     break
             elif c != "\r":
-                buffer[y][x] = c
+                _buffer[y][x] = c
                 x += 1
                 if x >= w:
                     if line_wrap:
@@ -114,39 +114,39 @@ def draw_board(board):
 
             draw_string(8 + d * x, 8 + d * y, piece.icon)
 
-def expand_buffer(new_w, new_h):
-    w = len(buffer[0]) if buffer else 0
-    h = len(buffer)
+def _expand_buffer(new_w, new_h):
+    w = len(_buffer[0]) if _buffer else 0
+    h = len(_buffer)
 
     if w < new_w:
-        for row in range(len(buffer)):
-            buffer[row] += [None for _ in range(new_w - w)]
+        for row in range(len(_buffer)):
+            _buffer[row] += [None for _ in range(new_w - w)]
 
     if h < new_h:
         for _ in range(new_h - h):
-            buffer.append([None for _ in range(new_w)])
+            _buffer.append([None for _ in range(new_w)])
 
 def _add_line_part(x, y, part):
-    if (type(buffer[y][x]) != int):
-        buffer[y][x] = 0
-    buffer[y][x] |= part
+    if (type(_buffer[y][x]) != int):
+        _buffer[y][x] = 0
+    _buffer[y][x] |= part
 
-left  = 0b0001
-right = 0b0010
-up    = 0b0100
-down  = 0b1000
+_left  = 0b0001
+_right = 0b0010
+_up    = 0b0100
+_down  = 0b1000
 
-lineChars = [None for _ in range(16)]
+_lineChars = [None for _ in range(16)]
 
-lineChars[left | right] = "─"
-lineChars[left | up]    = "┘"
-lineChars[left | down]  = "┐"
-lineChars[right | up]   = "└"
-lineChars[right | down] = "┌"
-lineChars[up | down]    = "│"
-lineChars[left | right | up]   = "┴"
-lineChars[left | right | down] = "┬"
-lineChars[left | up | down]    = "┤"
-lineChars[right | up | down]   = "├"
-lineChars[left | right | up | down] = "┼"
+_lineChars[_left | _right] = "─"
+_lineChars[_left | _up]    = "┘"
+_lineChars[_left | _down]  = "┐"
+_lineChars[_right | _up]   = "└"
+_lineChars[_right | _down] = "┌"
+_lineChars[_up | _down]    = "│"
+_lineChars[_left | _right | _up]   = "┴"
+_lineChars[_left | _right | _down] = "┬"
+_lineChars[_left | _up | _down]    = "┤"
+_lineChars[_right | _up | _down]   = "├"
+_lineChars[_left | _right | _up | _down] = "┼"
 
