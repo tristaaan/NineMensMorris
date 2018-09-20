@@ -129,3 +129,17 @@ class Mechanics(object):
       return self.player2
     return self.player1
 
+  def steal_piece_1(self, board):
+    enemy_pieces = self.inactive_player().remaining()
+    pieces_not_in_mill = {a.position for a in enemy_pieces if not self.mill_check(board, a.position, self.inactive_player())}
+    if not len(pieces_not_in_mill) == 0:
+      return pieces_not_in_mill
+
+    pieces_in_mill = {a.position for a in enemy_pieces if self.mill_check(board, a.position, self.inactive_player())}
+    return pieces_in_mill
+
+  def steal_piece_2(self,piece_to_remove,board):
+    piece = board.get_piece(piece_to_remove)
+    piece.remove_from_play()
+    board.remove_piece(piece_to_remove)
+    return

@@ -23,7 +23,12 @@ class Game(object):
       spot = self.take_input('Place piece: ','You cannot place there', self.board.open_spots())
       if (self.mechanics.place_piece(self.board, current_piece,spot)):
         print('%s made a mill!' % active_player)
-        self.steal_piece()
+        #steal piece
+        pieces_to_steal = self.mechanics.steal_piece_1(self.board)
+        print("Remove one of the following pieces:", pieces_to_steal)
+        piece_to_remove = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece',
+                                          pieces_to_steal)
+        self.mechanics.steal_piece_2(piece_to_remove, self.board)
         if self.mechanics.drawing:
           self.board.draw()
       self.mechanics.turn_counter += 1
@@ -42,34 +47,15 @@ class Game(object):
       to = self.take_input('Move piece to: ', 'You cannot move there', self.mechanics.available_to(self.board, at))
       if (self.mechanics.move_piece(self.board, at, to)):
         print('%s made a mill!' % active_player)
-        self.steal_piece()
+        # steal piece
+        pieces_to_steal = self.mechanics.steal_piece_1(self.board)
+        print("Remove one of the following pieces:", pieces_to_steal)
+        piece_to_remove = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece',
+                                          pieces_to_steal)
+        self.mechanics.steal_piece_2(piece_to_remove, self.board)
         if self.mechanics.drawing:
           self.board.draw()
       self.mechanics.turn_counter += 1
-
-
-  def steal_piece(self):
-    """
-    Removes a piece from the enemy player
-    """
-    enemy_pieces = self.mechanics.inactive_player().remaining()
-    pieces_not_in_mill = {a.position for a in enemy_pieces if not self.mechanics.mill_check(self.board, a.position, self.mechanics.inactive_player())}
-    if not len(pieces_not_in_mill) == 0:
-      print ("Remove one of the following pieces:", pieces_not_in_mill)
-      piece_to_remove = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece', pieces_not_in_mill)
-      piece = self.board.get_piece(piece_to_remove)
-      piece.remove_from_play()
-      self.board.remove_piece(piece_to_remove)
-      return
-
-    pieces_in_mill = {a.position for a in enemy_pieces if self.mechanics.mill_check(self.board, a.position, self.mechanics.inactive_player())}
-    print("Remove one of the following pieces:", pieces_in_mill)
-    piece_to_remove2 = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece',
-                                      pieces_in_mill)
-    piece = self.board.get_piece(piece_to_remove2)
-    piece.remove_from_play()
-    self.board.remove_piece(piece_to_remove2)
-    return
 
 
   def take_input(self, text, error, valid_ints):
