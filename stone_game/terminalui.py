@@ -137,11 +137,19 @@ def draw_string(x, y, string, w = None, h = None, line_wrap = False):
                if a line in the string is too long to fit in the bounding box.
     """
 
-    if w or h:
-        _expand_buffer(w or 0, h or 0)
+    if w is None:
+        max_width = max(map(len, string.split("\n")))
+        w = max(x + max_width, _buffer and len(_buffer[0]) or 0)
+    else:
+        w = x + w
 
-    w = w or len(_buffer)
-    h = h or (_buffer and len(_buffer) or 0)
+    if h is None:
+        height = len(string.split("\n"))
+        h = max(y + height, len(_buffer))
+    else:
+        h = y + h
+
+    _expand_buffer(w, h)
 
     if x < w:
         start_x = x
