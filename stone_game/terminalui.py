@@ -1,26 +1,57 @@
+# The drawing buffer is represented as a two-dimensional array.
+# Each cell can contain
+# - None meaning the cell is empty and will be drawn as a single space
+# - a string (single character) which will be drawn at that position
+# - a int where the bits represent which segments to draw
+#       the bits are ordered DURL (D = down, U = up, R = right, L = left)
+#
+#   U
+#   U
+# LL#RR
+#   D
+#   D
 _buffer = []
 
 def clear():
+    """
+    Clears the draw buffer.
+    """
+
     global _buffer
     _buffer = []
 
 def output_buffer():
+    """
+    Prints the draw buffer to the console.
+    """
+
     for l in _buffer:
         line = ""
-        for c in l:
-            if type(c) == int:
-                c = _lineChars[c]
-                if c:
-                    line += c
+        for cell in l:
+            if type(cell) == int: # cell contains a line or box-edge
+                lineChar = _lineChars[cell]
+                if lineChar:
+                    line += lineChar
                 else:
+                    # The line part isn't drawable
+                    # this should only occur when is contains the edge of a line
                     line += " "
-            elif type(c) == str:
-                line += c
-            else:
+            elif type(cell) == str: # cell contains a single character
+                line += cell
+            else: # cell is empty
                 line += " "
         print(line)
 
 def draw_box(x1, y1, x2, y2):
+    """
+    Draws a box into the draw buffer
+
+    x1: the x-coordinate of the upper left corner of the box
+    y1: the y-coordinate of the upper left corner of the box
+    x2: the x-coordinate of the lower right corner of the box
+    y2: the y-coordinate of the lower right corner of the box
+    """
+
     _expand_buffer(x2 + 1, y2 + 1)
 
     for x in range(x1 + 1, x2):
@@ -37,6 +68,16 @@ def draw_box(x1, y1, x2, y2):
     _add_line_part(x2, y2, _left  | _up)
 
 def draw_h_line(x1, x2, y, includeEdges = True):
+    """
+    Draws a horizontal line from (x1, y) to (x2, y) into the draw buffer.
+
+    x1: the x-coordinate of the left edge of the line
+    x2: the x-coordinate of the right edge of the line
+    y:  the y-coordinate to draw the line at
+    includeEdges: Wether or not to draw to the edge of the cells at the start and end of the line.
+                  A false value means the function will only draw to the center of these cells.
+    """
+
     _expand_buffer(x2 + 1, y + 1)
 
     if includeEdges:
@@ -50,6 +91,16 @@ def draw_h_line(x1, x2, y, includeEdges = True):
         _add_line_part(x, y, _left | _right)
 
 def draw_v_line(x, y1, y2, includeEdges = True):
+    """
+    Draws a vertical line from (x, y1) to (x, y2) into the draw buffer.
+
+    x:  the x-coordinate to draw the line at
+    y1: the y-coordinate of the top edge of the line
+    y2: the y-coordinate of the bottom edge of the line
+    includeEdges: Wether or not to draw to the edge of the cells at the start and end of the line.
+                  A false value means the function will only draw to the center of these cells.
+    """
+
     _expand_buffer(x + 1, y2 + 1)
 
     if includeEdges:
@@ -63,6 +114,20 @@ def draw_v_line(x, y1, y2, includeEdges = True):
         _add_line_part(x, y, _up | _down)
 
 def draw_string(x, y, string, w = None, h = None, line_wrap = False):
+    """
+    Draws a string of characters into the draw buffer.
+
+    x:         the x-coordinate at which to draw the string
+    y:         the y-coordinate at which to draw the string
+    string:    the string to draw
+    w:         the width of a bounding-box to keep the drawn string within
+               this value may be None to specify that no bounding-box will be used
+    h:         the height of a bounding-box to keep the drawn string within
+               this value may be None to specify that no bounding-box will be used
+    line_wrap: Wether or not to wrap the string back to the provided x-coordinate
+               if a line in the string is too long to fit in the bounding box.
+    """
+
     if w or h:
         _expand_buffer(w or 0, h or 0)
 
@@ -73,15 +138,15 @@ def draw_string(x, y, string, w = None, h = None, line_wrap = False):
         start_x = x
         i = 0
         while i < len(string):
-            c = string[i]
+            char = string[i]
             i += 1
-            if c == "\n":
+            if char == "\n":
                 x = start_x
                 y += 1
                 if y >= h:
                     break
-            elif c != "\r":
-                _buffer[y][x] = c
+            elif char != "\r":
+                _buffer[y][x] = char
                 x += 1
                 if x >= w:
                     if line_wrap:
@@ -97,6 +162,12 @@ def draw_string(x, y, string, w = None, h = None, line_wrap = False):
                         break
 
 def draw_board(board):
+    """
+    Draws the provided board into the draw buffer.
+
+    board: the board to draw
+    """
+
     draw_box(0, 0, 16, 16)
     draw_box(3, 3, 13, 13)
     draw_box(6, 6, 10, 10)
@@ -108,6 +179,8 @@ def draw_board(board):
     for i in range(1, 24 + 1):
         piece = board.get_piece(i)
         if piece:
+            # Calculates the x & y coordinates by using
+            # a triangle function with period 8 and amplitude 4
             x = max(-1, min(1, 2 - abs(i % 8 - 4)))
             y = max(-1, min(1, abs((i + 2) % 8 - 4) - 2))
             d = [8, 5, 2][(i - 1) // 8]
