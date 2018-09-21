@@ -10,11 +10,6 @@ class GameTestCase(unittest.TestCase):
   def setUp(self):
     self.game = Game()
 
-  # this is a comprehensive test that places all pieces,
-  # steals 1 and then suffocates one player
-  def testMockGame(self):
-    pass
-
   def testEndOfPlacePhase(self):
     for i in range(0,17):
       if i % 2 == 0:

@@ -22,7 +22,7 @@ class Piece(object):
 
   def __init__(self, player_name, piece_icon):
     self.owner = None
-    self.position = None
+    self.position = 0
     self.owner = player_name
     self.icon = piece_icon
 
