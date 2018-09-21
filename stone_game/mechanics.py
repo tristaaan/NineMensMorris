@@ -50,10 +50,10 @@ class Mechanics(object):
     at: the name of the node the piece is being moved
     to: name of node to move the piece to
     """
-    player = self.active_player().name
+    player = self.active_player()
     if board.get_piece(at) == None:
       raise ValueError('There is no piece at %d' % at)
-    if board.get_piece(at).owner != player:
+    if board.get_piece(at).owner != player.name:
       raise ValueError('You cannot move piece at %d, it is not yours' % at)
     elif board.get_piece(to) != None:
       raise ValueError('You cannot move to %d there is already a piece there' % to)
@@ -65,43 +65,34 @@ class Mechanics(object):
 
     if self.drawing:
       board.draw()
-    mill = self.mill_check(board, at, self.active_player())
+    mill = self.mill_check(board, to, player)
     if not mill:
       self.turn_counter += 1
     return mill
 
-  def available_moves(self, board, player):
+  def movable_pieces(self,board,player):
     """
-    Get a set of available moves
+    Get a list of the available pieces that a player can move
+    board: the board
+    player: the player
+    """
+    available_pieces = player.remaining_in_play()
+    ret = []
+    for p in available_pieces:
+      adjacent = board.nodes[p.position].edges
+      empty_adjacents = [a for a in adjacent if board.get_piece(a) == None]
+      if empty_adjacents:
+        ret.append(p)
+    return ret
+
+  def moves_for_piece(self,board,at):
+    """
+    Get a list of available moves for a piece
     board: board
-    player: whose pieces to fetch from the board
+    at: piece to get moves from
     """
-    available_pieces = player.remaining()
-    ret = set()
-    for p in available_pieces:
-      adjacent = board.nodes[p.position].edges
-      open_spots = {a for a in adjacent if board.get_piece(a) == None}
-      ret = ret | open_spots
-    return ret
-
-  def available_at(self,board,player):
-    """
-    returns the available pieces that can be moved
-    """
-    available_pieces = player.remaining()
-    ret = set()
-    for p in available_pieces:
-      adjacent = board.nodes[p.position].edges
-      moveable_pieces = {p for a in adjacent if board.get_piece(a) == None}
-      ret = ret | moveable_pieces
-    return ret
-
-  def available_to(self,board,at):
-    """
-    returns the open spots for at to be moved to
-    """
-    adjacent = board.nodes[at.position].edges
-    open_spots = {a for a in adjacent if board.get_piece(a) == None}
+    adjacent = board.nodes[at].edges
+    open_spots = [a for a in adjacent if board.get_piece(a) == None]
     return open_spots
 
 
@@ -109,7 +100,7 @@ class Mechanics(object):
     """
     Check for a mill given a piece
     board: the board to read to find a mill
-    at: name of the node to check if its in a mill
+    at: position the node to check if it's in a mill
     """
     for mill in self.mills:
       if at in mill:
@@ -141,7 +132,7 @@ class Mechanics(object):
     :param board:
     :return:
     """
-    enemy_pieces = self.inactive_player().remaining()
+    enemy_pieces = self.inactive_player().remaining_in_play()
     pieces_not_in_mill = {a.position for a in enemy_pieces if not self.mill_check(board, a.position, self.inactive_player())}
     if not len(pieces_not_in_mill) == 0:
       return pieces_not_in_mill
