@@ -1,4 +1,5 @@
 from .piece import Piece
+import stone_game.terminalui as ui
 
 
 class Node(object):
@@ -109,20 +110,8 @@ class Board(object):
     """
     Print out the board
     """
-    print('%s---------%s---------%s' % (self.piece_str(1), self.piece_str(2), self.piece_str(3)))
-    print('|         |         |')
-    print('|  %s------%s------%s  |' % (self.piece_str(9), self.piece_str(10), self.piece_str(11)))
-    print('|  |      |      |  |')
-    print('|  |  %s---%s---%s  |  |' % (self.piece_str(17), self.piece_str(18), self.piece_str(19)))
-    print('|  |  |       |  |  |')
-    print('%s--%s--%s       %s--%s--%s' % (self.piece_str(8),  self.piece_str(16), self.piece_str(24),
-                                           self.piece_str(20), self.piece_str(12), self.piece_str(4)))
-    print('|  |  |       |  |  |')
-    print('|  |  %s---%s---%s  |  |' % (self.piece_str(23), self.piece_str(22), self.piece_str(21)))
-    print('|  |      |      |  |')
-    print('|  %s------%s------%s  |' % (self.piece_str(15), self.piece_str(14), self.piece_str(13)))
-    print('|         |         |')
-    print('%s---------%s---------%s' % (self.piece_str(7), self.piece_str(6), self.piece_str(5)))
+    ui.draw_board(self)
+    ui.output_buffer()
 
   def piece_str(self, at):
     """
