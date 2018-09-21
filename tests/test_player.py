@@ -16,12 +16,12 @@ class PlayerTestCase(unittest.TestCase):
     self.assertEqual(len(player.reserves), 9,
                      'player has more than nine pieces')
 
-    rem = player.remaining()
+    rem = player.remaining_in_play()
     self.assertEqual(len(rem), 0, 'new player has pieces in play')
 
     for i in range(1,10):
       piece = player.inactive_piece()
       board.add_piece(piece, i)
 
-    rem = player.remaining()
+    rem = player.remaining_in_play()
     self.assertEqual(len(rem), 9, 'player does not have all pieces in play')
