@@ -6,8 +6,8 @@ from .player import Player
 class Game(object):
 
   def __init__(self):
-    self.player1 = Player('Player1', '◎')
-    self.player2 = Player('Player2', '◉')
+    self.player1 = Player('Player1', '○')
+    self.player2 = Player('Player2', '●')
 
     self.board = Board()
     self.mechanics = Mechanics(self.player1, self.player2, drawing=True)
