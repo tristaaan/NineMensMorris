@@ -21,7 +21,17 @@ class Player(object):
     """
     return self.name
 
-  def remaining(self):
+  def remaining_unplaced(self):
+    """
+    Get a list of unplaced pieces
+    """
+    ret = []
+    for piece in self.reserves:
+      if piece.state == StoneState.UNPLACED:
+        ret.append(piece)
+    return ret
+
+  def remaining_in_play(self):
     """
     Get a list of the pieces that are still in play
     """
