@@ -38,7 +38,10 @@ class Mechanics(object):
       return
     if self.drawing:
       board.draw()
-    return self.mill_check(board, at, self.active_player())
+    mill = self.mill_check(board, at, self.active_player())
+    if not mill:
+      self.turn_counter += 1
+    return mill
 
   def move_piece(self, board, at, to):
     """
@@ -62,7 +65,10 @@ class Mechanics(object):
 
     if self.drawing:
       board.draw()
-    return self.mill_check(board, at, self.active_player())
+    mill = self.mill_check(board, at, self.active_player())
+    if not mill:
+      self.turn_counter += 1
+    return mill
 
   def available_moves(self, board, player):
     """
@@ -129,7 +135,12 @@ class Mechanics(object):
       return self.player2
     return self.player1
 
-  def steal_piece_1(self, board):
+  def stealable_pieces(self, board):
+    """
+    Returns a list of all pieces that can be stolen from the inactive player
+    :param board:
+    :return:
+    """
     enemy_pieces = self.inactive_player().remaining()
     pieces_not_in_mill = {a.position for a in enemy_pieces if not self.mill_check(board, a.position, self.inactive_player())}
     if not len(pieces_not_in_mill) == 0:
@@ -138,8 +149,18 @@ class Mechanics(object):
     pieces_in_mill = {a.position for a in enemy_pieces if self.mill_check(board, a.position, self.inactive_player())}
     return pieces_in_mill
 
-  def steal_piece_2(self,piece_to_remove,board):
+  def steal_piece(self,piece_to_remove,board):
+    """
+    Remove piece_to_remove from the board.
+
+    :param piece_to_remove:
+    :param board:
+    :return:
+    """
     piece = board.get_piece(piece_to_remove)
     piece.remove_from_play()
     board.remove_piece(piece_to_remove)
+    if self.drawing:
+      board.draw()
+    self.turn_counter += 1
     return

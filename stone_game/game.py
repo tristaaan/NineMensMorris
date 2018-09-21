@@ -24,14 +24,11 @@ class Game(object):
       if (self.mechanics.place_piece(self.board, current_piece,spot)):
         print('%s made a mill!' % active_player)
         #steal piece
-        pieces_to_steal = self.mechanics.steal_piece_1(self.board)
+        pieces_to_steal = self.mechanics.stealable_pieces(self.board)
         print("Remove one of the following pieces:", pieces_to_steal)
         piece_to_remove = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece',
                                           pieces_to_steal)
-        self.mechanics.steal_piece_2(piece_to_remove, self.board)
-        if self.mechanics.drawing:
-          self.board.draw()
-      self.mechanics.turn_counter += 1
+        self.mechanics.steal_piece(piece_to_remove, self.board)
 
     # MOVE PHASE
     print('move phase')
@@ -48,14 +45,11 @@ class Game(object):
       if (self.mechanics.move_piece(self.board, at, to)):
         print('%s made a mill!' % active_player)
         # steal piece
-        pieces_to_steal = self.mechanics.steal_piece_1(self.board)
+        pieces_to_steal = self.mechanics.stealable_pieces(self.board)
         print("Remove one of the following pieces:", pieces_to_steal)
         piece_to_remove = self.take_input('Which piece would you like to remove?: ', 'You cannot remove that piece',
                                           pieces_to_steal)
-        self.mechanics.steal_piece_2(piece_to_remove, self.board)
-        if self.mechanics.drawing:
-          self.board.draw()
-      self.mechanics.turn_counter += 1
+        self.mechanics.steal_piece(piece_to_remove, self.board)
 
 
   def take_input(self, text, error, valid_ints):
