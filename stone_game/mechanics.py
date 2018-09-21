@@ -70,7 +70,7 @@ class Mechanics(object):
       self.turn_counter += 1
     return mill
 
-  def movable_pieces(self,board,player):
+  def movable_pieces(self, board, player):
     """
     Get a list of the available pieces that a player can move
     board: the board

@@ -18,11 +18,11 @@ class Piece(object):
   position: the location of the piece on the board, 0 is none
   """
   icon = ''
-  owner = None
   state = StoneState.UNPLACED
-  position = 0
 
   def __init__(self, player_name, piece_icon):
+    self.owner = None
+    self.position = None
     self.owner = player_name
     self.icon = piece_icon
 
