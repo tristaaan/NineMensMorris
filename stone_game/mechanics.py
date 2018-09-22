@@ -70,7 +70,7 @@ class Mechanics(object):
       self.turn_counter += 1
     return mill
 
-  def movable_pieces(self,board,player):
+  def movable_pieces(self, board, player):
     """
     Get a list of the available pieces that a player can move
     board: the board
@@ -92,7 +92,14 @@ class Mechanics(object):
     at: piece to get moves from
     """
     adjacent = board.nodes[at].edges
-    open_spots = [a for a in adjacent if board.get_piece(a) == None]
+    open_spots = {a for a in adjacent if board.get_piece(a) == None}
+    # gather long moves.
+    if len(self.active_player().remaining_in_play()) == 3 and \
+       at not in [10,12,14,16]: # we cannot make long moves from these spots
+      for mill in self.mills:
+        # print(at, mill, board.get_pieces(mill))
+        if at in mill and board.get_pieces(mill).count(None) == 2:
+          open_spots.update([m for m in mill if m != at])
     return open_spots
 
 

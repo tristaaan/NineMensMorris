@@ -35,7 +35,7 @@ class MechanicsTestCase(unittest.TestCase):
     move_set = [p.position for p in movable_pieces]
     self.assertEqual(move_set, [17], 'a piece which should be movable is not')
     moves_for_piece = self.mechanics.moves_for_piece(self.board, 17)
-    self.assertEqual(moves_for_piece, [24])
+    self.assertEqual(moves_for_piece, {24})
 
     with self.assertRaises(ValueError):
       self.mechanics.move_piece(self.board, 19, 24)
@@ -47,6 +47,20 @@ class MechanicsTestCase(unittest.TestCase):
     movable_pieces = self.mechanics.movable_pieces(self.board, player)
     move_set = {p.position for p in movable_pieces}
     self.assertEqual(move_set, {18, 12, 14})
+
+  def testLongMoves(self):
+    stones = self.player1.remaining_unplaced()
+    self.board.add_piece(stones[0], 1)
+    self.board.add_piece(stones[1], 2)
+    self.board.add_piece(stones[2], 5)
+    moves = self.mechanics.moves_for_piece(self.board, 1)
+    self.assertEqual(moves, {8,7}, 'single long move not registering')
+    moves = self.mechanics.moves_for_piece(self.board, 5)
+    self.assertEqual(moves, {3,4,6,7}, 'two long moves not registering')
+    # check that we can't do long moves when more than three pieces
+    self.board.add_piece(stones[3], 6)
+    moves = self.mechanics.moves_for_piece(self.board, 6)
+    self.assertEqual(moves, {7,14}, 'we can do a long move when >3 pieces')
 
   def testMillCheck(self):
     player = self.mechanics.active_player()
