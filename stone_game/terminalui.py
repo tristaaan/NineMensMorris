@@ -218,6 +218,43 @@ def draw_board(board):
             icon_y = 9 + d * y
             draw_string(icon_x, icon_y, piece.icon)
 
+def draw_tournament(tournament):
+    bracket_height = 2
+    bracket_x_start = 0
+    bracket_y_start = 0
+
+    for round in range(tournament.num_rounds):
+        round_names = [
+            (
+                "*** BYE ***" if round == 0 else "        "
+            ) if name is None else name
+            for name in tournament.round_winners[round]
+        ]
+
+        longest_name_length = max([len(name) for name in round_names])
+
+        line_x1 = bracket_x_start + longest_name_length
+        line_x2 = bracket_x_start + longest_name_length + 4
+
+        y = bracket_y_start
+        even = True
+        for name in round_names:
+            draw_string(bracket_x_start, y, name)
+
+            if len(round_names) > 1:
+                draw_h_line(line_x1, line_x2, y, False)
+
+                if even:
+                    draw_v_line(line_x2, y, y + bracket_height, False)
+                    draw_h_line(line_x2, line_x2 + 3, y + bracket_height // 2, False)
+
+            y = y + bracket_height
+            even = not even
+
+        bracket_x_start = bracket_x_start + longest_name_length + 8
+        bracket_y_start = bracket_y_start + bracket_height // 2
+        bracket_height = bracket_height * 2
+
 def _expand_buffer(new_w, new_h):
     w = len(_buffer[0]) if _buffer else 0
     h = len(_buffer)
