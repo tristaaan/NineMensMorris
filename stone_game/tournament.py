@@ -1,6 +1,8 @@
 import math
 import random
 
+import stone_game.terminalui as ui
+
 class Tournament:
     def __init__(self, players):
         self.num_rounds = math.ceil(math.log2(len(players))) + 1
@@ -50,3 +52,8 @@ class Tournament:
         if self.current_match * 2 > self.num_players_in_round(self.current_round):
             self.current_match = 0
             self.current_round += 1
+
+    def draw(self):
+        ui.clear()
+        ui.draw_tournament(self)
+        ui.output_buffer()
