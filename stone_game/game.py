@@ -10,11 +10,12 @@ class Game(object):
     self.player2 = Player('Player2', '○')
 
     self.board = Board()
-    self.mechanics = Mechanics(self.player1, self.player2, drawing=True)
+    self.mechanics = Mechanics(self.player1, self.player2)
 
   def begin(self):
     # PLACE PHASE
     active_player = self.mechanics.active_player()
+    self.board.draw()
     while self.place_phase_conditional():
       print('---- Turn %d ----' % self.mechanics.turn_counter)
       active_player = self.mechanics.active_player()
@@ -24,7 +25,9 @@ class Game(object):
                              'You cannot place there', \
                              self.board.open_spots())
       # Place piece, steal if a mill was formed
-      if self.mechanics.place_piece(self.board, current_piece,spot):
+      millFormed = self.mechanics.place_piece(self.board, current_piece,spot)
+      self.board.draw()
+      if millFormed:
         print('A mill was created!')
         pieces_to_steal = self.mechanics.stealable_pieces(self.board)
         print("Remove one of the following pieces:", pieces_to_steal)
@@ -33,6 +36,7 @@ class Game(object):
           'You cannot remove that piece',            \
           pieces_to_steal)
         self.mechanics.steal_piece(piece_to_remove, self.board)
+        self.board.draw()
 
     # MOVE PHASE
     print('move phase')
@@ -52,7 +56,9 @@ class Game(object):
       to = self.take_input('Move piece to: ', 'You cannot move there',
                            possible_moves)
       # Move piece, steal if a mill was formed
-      if self.mechanics.move_piece(self.board, at, to):
+      millFormed = self.mechanics.move_piece(self.board, at, to)
+      self.board.draw();
+      if millFormed:
         print('A mill was created!')
         pieces_to_steal = self.mechanics.stealable_pieces(self.board)
         print("Remove one of the following pieces:", pieces_to_steal)
@@ -61,6 +67,7 @@ class Game(object):
           'You cannot remove that piece',            \
           pieces_to_steal)
         self.mechanics.steal_piece(piece_to_remove, self.board)
+        self.board.draw()
 
     print('----- GAME OVER -----')
     print('\n%s is victorious!\n' % self.mechanics.inactive_player().name)
