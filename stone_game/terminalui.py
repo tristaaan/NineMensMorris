@@ -228,7 +228,7 @@ def draw_tournament(tournament):
             (
                 "*** BYE ***" if round == 0 else "        "
             ) if name is None else name
-            for name in tournament.round_winners[round]
+            for name in tournament.rounds_players[round]
         ]
 
         longest_name_length = max([len(name) for name in round_names])
@@ -246,14 +246,14 @@ def draw_tournament(tournament):
 
                 if even:
                     draw_v_line(line_x2, y, y + bracket_height, False)
-                    draw_h_line(line_x2, line_x2 + 3, y + bracket_height // 2, False)
+                    draw_h_line(line_x2, line_x2 + 4, y + bracket_height // 2, False)
 
-            y = y + bracket_height
+            y += bracket_height
             even = not even
 
-        bracket_x_start = bracket_x_start + longest_name_length + 8
-        bracket_y_start = bracket_y_start + bracket_height // 2
-        bracket_height = bracket_height * 2
+        bracket_x_start += longest_name_length + 9
+        bracket_y_start += + bracket_height // 2
+        bracket_height *= 2
 
 def _expand_buffer(new_w, new_h):
     w = len(_buffer[0]) if _buffer else 0
