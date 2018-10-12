@@ -29,7 +29,7 @@ class AI():
             score += 1
 
         # score openness
-        if self.heuristics.open_adjacent(board, pos) > 1:
+        if self.heuristics.open_adjacent(board, pos) >= 1:
             score += 1
 
         # Adjust score with some random value based on difficulty
@@ -54,23 +54,21 @@ class AI():
                     bestPosition = n
         return bestPosition
 
-    def move_stone(self, board, player):
+    def move_stone(self, board, player, movable, move_map):
         test_board = copy.deepcopy(board)
         best_score = -100
         best_new_position = None
         best_movable_stone = None
-        stones = player.remaining_in_play()
-        for s in stones:
-            possible_moves = self.heuristics.moves_for_piece(board, s.position)
-            current_position = s.position
-            piece = test_board.remove_piece(current_position)
+        for s in movable:
+            possible_moves = move_map[s]
+            piece = test_board.remove_piece(s)
             for pos in possible_moves:
-                score = self._scoring(board, pos, player)
+                score = self._scoring(test_board, pos, player)
                 if score > best_score:
                     best_score = score
-                    best_movable_stone = s.position
+                    best_movable_stone = s
                     best_new_position = pos
-            test_board.add_piece(piece, current_position)
+            test_board.add_piece(piece, s)
         return (best_movable_stone, best_new_position)
 
     def steal_stone(self, board, stealable, opponent):

@@ -2,13 +2,11 @@ import copy
 
 from .rules import mills
 from .piece import Piece
-from .rules import Rules
 
 class Heuristics(object):
 
   def __init__(self, player):
     self.player = player
-    self.rules = Rules(player, None)
 
   def creates_mill(self, board, at):
     """
@@ -66,12 +64,6 @@ class Heuristics(object):
       if board[n].piece != None and board[n].piece.owner == self.player.name:
         count += 1
     return count
-
-  def movable_pieces(self, board):
-    return self.rules.movable_pieces(board, self.player)
-
-  def moves_for_piece(self, board, at):
-    return self.rules.moves_for_piece(board, at)
 
   def open_adjacent(self, board, at):
     edges = board[at].edges
