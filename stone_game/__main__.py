@@ -4,7 +4,13 @@ from .ai_player import AIPlayer
 from .piece import StoneColor
 
 if __name__ == '__main__':
-  p1 = AIPlayer('Player1', StoneColor.BLACK)
-  p2 = AIPlayer('Player2', StoneColor.WHITE)
-  g = Game(p1, p2)
-  g.begin()
+  results = []
+  for i in range(50):
+    p1 = AIPlayer('Player1', StoneColor.BLACK)
+    p2 = AIPlayer('Player2', StoneColor.WHITE, difficulty=1)
+    g = Game(p1, p2)
+    results.append(g.begin())
+
+  print('Draws:  %d ' % results.count(0))
+  print('p1 win: %d ' % results.count(1))
+  print('p2 win: %d ' % results.count(2))
