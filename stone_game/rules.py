@@ -1,6 +1,15 @@
 
 
-class Mechanics(object):
+# hard coded, used in heuristics too
+# keep the indexing pattern in-line with the board
+mills = [
+  [1, 2,  3], [3, 4, 5 ], [5,  6, 7], [7, 8, 1], # outer
+  [9, 10,11], [11,12,13], [13,14,15], [15,16,9], # middle
+  [17,18,19], [19,20,21], [21,22,23], [23,24,17], # inner
+  [2, 10,18], [4, 12,20], [6, 14,22], [8, 16,24]  # cross mills
+]
+
+class Rules(object):
   """
   Rules and game mechanics for the Stone Game
   mills: An array of 3 length arrays which are mills on the board
@@ -9,16 +18,8 @@ class Mechanics(object):
   player2: Player 2
   """
 
-  # hard coded, this should maybe be in the board class to
-  # keep the indexing pattern in-line with the board
-  mills = [
-    [1, 2,  3], [3, 4, 5 ], [5,  6, 7], [7, 8, 1], # outer
-    [9, 10,11], [11,12,13], [13,14,15], [15,16,9], # middle
-    [17,18,19], [19,20,21], [21,22,23], [23,24,17], # inner
-    [2, 10,18], [4, 12,20], [6, 14,22], [8, 16,24]  # cross mills
-  ]
-
   def __init__(self, player1, player2):
+    super().__init__()
     self.turn_counter = 0
     self.player1 = player1
     self.player2 = player2
@@ -80,7 +81,7 @@ class Mechanics(object):
         ret.append(p)
     return ret
 
-  def moves_for_piece(self,board,at):
+  def moves_for_piece(self, board, at):
     """
     Get a list of available moves for a piece
     board: board
@@ -91,7 +92,7 @@ class Mechanics(object):
     # gather long moves.
     if len(self.active_player().remaining_in_play()) == 3 and \
        at not in [10,12,14,16]: # we cannot make long moves from these spots
-      for mill in self.mills:
+      for mill in mills:
         # print(at, mill, board.get_pieces(mill))
         if at in mill and board.get_pieces(mill).count(None) == 2:
           open_spots.update([m for m in mill if m != at])
@@ -104,7 +105,7 @@ class Mechanics(object):
     board: the board to read to find a mill
     at: position the node to check if it's in a mill
     """
-    for mill in self.mills:
+    for mill in mills:
       if at in mill:
         pieces = board.get_pieces(mill)
         if [p != None and p.owner == player.name for p in pieces].count(True) == 3:

@@ -58,6 +58,8 @@ class BoardTestCase(unittest.TestCase):
     p = board.get_piece(1)
     self.assertEqual(p, stones[0])
 
+    self.assertEqual(board[1].piece, stones[0])
+
   def testGetPieces(self):
     board = Board()
     stones = self.create_pieces()

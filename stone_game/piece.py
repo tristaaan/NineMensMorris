@@ -8,6 +8,9 @@ class StoneState(object):
   IN_PLAY = 'IN_PLAY'
   CAPTURED = 'CAPTURED'
 
+class StoneColor(object):
+  BLACK='●'
+  WHITE='○'
 
 class Piece(object):
   """
