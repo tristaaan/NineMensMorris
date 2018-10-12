@@ -12,7 +12,7 @@ class Tournament:
         rounds = []
 
         for round_i in range(self.num_rounds):
-            round_size = self.num_players_in_round(round_i)
+            round_size = self.num_games_in_round(round_i)
 
             round = [None for _ in range(round_size)]
 
@@ -32,25 +32,25 @@ class Tournament:
 
         self.rounds_players = rounds
         self.current_round = 0
-        self.current_match = 0
+        self.current_game = 0
 
-    def num_players_in_round(self, round):
+    def num_games_in_round(self, round):
         return 2 ** (self.num_rounds - round - 1)
 
-    def play_next_match(self):
-        if self.current_match >= self.num_rounds:
+    def play_next_game(self):
+        if self.current_game >= self.num_rounds:
             raise Exception("All rounds have already been played. ")
 
-        player1 = self.rounds_players[self.current_round][self.current_match * 2]
-        player2 = self.rounds_players[self.current_round][self.current_match * 2 + 1]
+        player1 = self.rounds_players[self.current_round][self.current_game * 2]
+        player2 = self.rounds_players[self.current_round][self.current_game * 2 + 1]
 
         # TODO play match between player1 & player2
-        # TODO insert winning player into self.rounds_player[self.current_round + 1][self.current_match // 2]
+        # TODO insert winning player into self.rounds_player[self.current_round + 1][self.current_game // 2]
 
         self.current_round += 1
 
-        if self.current_match * 2 > self.num_players_in_round(self.current_round):
-            self.current_match = 0
+        if self.current_game * 2 > self.num_games_in_round(self.current_round):
+            self.current_game = 0
             self.current_round += 1
 
     def draw(self):
