@@ -34,9 +34,9 @@ class AI():
 
         # Adjust score with some random value based on difficulty
         if self.difficulty == 1:  # Easy difficulty
-            score -= randint(1, 4)
+            score -= randint(1, 30)
         elif self.difficulty == 2:  # Medium difficulty
-            score -= randint(0, 2)
+            score -= randint(0, 11)
         return score
 
     def _bestPlacement(self, color, phase):

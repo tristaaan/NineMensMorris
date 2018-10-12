@@ -5,6 +5,9 @@ from .player import Player
 
 class Game(object):
 
+  # 18 moves for placing, and 50 after.
+  draw_threshold = 68
+
   def __init__(self, player1, player2):
     self.player1 = player1
     self.player2 = player2
@@ -19,8 +22,12 @@ class Game(object):
     self.place_phase()
     self.move_phase()
 
+    if self.rules.turn_counter >= self.draw_threshold:
+      return 0
+
     print('----- GAME OVER -----')
     print('\n%s is victorious!\n' % self.rules.inactive_player().name)
+    return (self.rules.turn_counter % 2) + 1
 
   def place_phase(self):
     active_player = self.rules.active_player()
@@ -84,4 +91,5 @@ class Game(object):
     current_player = self.rules.active_player()
     current_movables = self.rules.movable_pieces(self.board, current_player)
     return len(current_player.remaining_in_play()) > 2 and \
-           len(current_movables) > 0
+           len(current_movables) > 0 and \
+           self.rules.turn_counter <= self.draw_threshold
