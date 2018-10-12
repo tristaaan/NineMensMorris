@@ -223,12 +223,12 @@ def draw_tournament(tournament):
     bracket_x_start = 0
     bracket_y_start = 0
 
-    for round in range(tournament.num_rounds):
+    for round in range(tournament.num_rounds + 1):
         round_names = [
             (
-                "*** BYE ***" if round == 0 else "        "
-            ) if name is None else name
-            for name in tournament.rounds_players[round]
+                "*** BYE ***" if round == 0 else " === "
+            ) if player is None else player.name
+            for player in tournament.rounds_players[round]
         ]
 
         longest_name_length = max([len(name) for name in round_names])
