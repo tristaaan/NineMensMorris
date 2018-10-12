@@ -55,7 +55,7 @@ class Rules(object):
       raise ValueError('You cannot move piece at %d, it is not yours' % at)
     elif board.get_piece(to) != None:
       raise ValueError('You cannot move to %d there is already a piece there' % to)
-    elif to not in board.nodes[at].edges:
+    elif to not in board.nodes[at].edges and len(player.remaining_in_play()) > 3:
       raise ValueError('You cannot move to %d to %d, they are not adjacent' % (at, to))
 
     moving_piece = board.remove_piece(at)
