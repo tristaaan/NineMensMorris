@@ -45,20 +45,20 @@ class AI():
 
     def place_stone(self, board, player):
         bestPosition = None
-        bestScore = -100
+        best_score = -100
         for n in range(1, 25):
             if board[n].piece == None:
                 score = self._scoring(board, n, player)
-                if score > bestScore:
-                    bestScore = score
+                if score > best_score:
+                    best_score = score
                     bestPosition = n
         return bestPosition
 
     def move_stone(self, board, player):
         test_board = copy.deepcopy(board)
-        bestScore = -100
-        bestNewPosition = None
-        bestMovableStone = None
+        best_score = -100
+        best_new_position = None
+        best_movable_stone = None
         stones = player.remaining_in_play()
         for s in stones:
             possible_moves = self.heuristics.moves_for_piece(board, s.position)
@@ -66,22 +66,22 @@ class AI():
             piece = test_board.remove_piece(current_position)
             for pos in possible_moves:
                 score = self._scoring(board, pos, player)
-                if score > bestScore:
-                    bestScore = score
-                    bestMovableStone = s.position
-                    bestNewPosition = pos
+                if score > best_score:
+                    best_score = score
+                    best_movable_stone = s.position
+                    best_new_position = pos
             test_board.add_piece(piece, current_position)
-        return (bestMovableStone, bestNewPosition)
+        return (best_movable_stone, best_new_position)
 
     def steal_stone(self, board, stealable, opponent):
         test_board = copy.deepcopy(board)
-        bestPosition = None
-        bestScore = -100
+        best_position = None
+        best_score = -100
         for s in stealable:
             piece = test_board.remove_piece(s)
             score = self._scoring(test_board, s, opponent)
-            if score > bestScore:
-                bestPosition = s
-                bestScore = score
+            if score > best_score:
+                best_position = s
+                best_score = score
             test_board.add_piece(piece, s)
-        return bestPosition
+        return best_position
