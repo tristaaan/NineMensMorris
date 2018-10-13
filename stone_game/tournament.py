@@ -3,7 +3,7 @@ import random
 
 from .game import Game
 from .player import Player
-from .ai_player import AIPlayer
+from .ai_player import AIPlayer, Difficulty
 from .piece import StoneColor
 from .util import take_input_int, take_input_str
 import stone_game.terminalui as ui
@@ -123,9 +123,23 @@ def tournament_from_console_input():
     ).lower()
 
     player_name = take_input_str('Please select a name: ', None, None)
-    print()
 
-    players.append(TournamentPlayer(player_type == 'human', player_name))
+    ai_difficulty = None
+    if player_type == 'ai':
+      ai_difficulty = take_input_str(
+        'Please select a difficulty (easy/medium/hard): ',
+        '',
+        ['easy', 'medium', 'hard']
+      )
+      ai_difficulty = Difficulty[ai_difficulty.upper()]
+
+    players.append(TournamentPlayer(
+      player_type == 'human',
+      player_name,
+      ai_difficulty
+    ))
+
+    print()
 
     if len(players) >= 2:
       while True:
@@ -139,15 +153,16 @@ def tournament_from_console_input():
   return Tournament(players)
 
 class TournamentPlayer:
-  def __init__(self, is_human, name):
+  def __init__(self, is_human, name, difficulty = None):
     self.is_human = is_human
     self.name = name
+    self.difficulty = difficulty
   
   def to_game_player(self, color):
     if self.is_human:
       return Player(self.name, color)
     else:
-      return AIPlayer(self.name, color)
+      return AIPlayer(self.name, color, self.difficulty)
 
   def __str__(self):
     return self.name
