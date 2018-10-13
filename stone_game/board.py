@@ -110,6 +110,7 @@ class Board(object):
     """
     Print out the board
     """
+    ui.clear()
     ui.draw_board(self)
     ui.output_buffer()
 

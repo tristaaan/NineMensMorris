@@ -225,10 +225,11 @@ def _expand_buffer(new_w, new_h):
     if w < new_w:
         for row in range(len(_buffer)):
             _buffer[row] += [None for _ in range(new_w - w)]
+        w = new_w
 
     if h < new_h:
         for _ in range(new_h - h):
-            _buffer.append([None for _ in range(new_w)])
+            _buffer.append([None for _ in range(w)])
 
 def _add_line_part(x, y, part):
     if (type(_buffer[y][x]) != int):
