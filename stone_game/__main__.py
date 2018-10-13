@@ -3,7 +3,7 @@ from .player import Player
 from .ai_player import AIPlayer
 from .piece import StoneColor
 from .ai import Difficulty
-from .util import take_input_int
+from .util import take_input_int, take_input_str
 from .tournament import tournament_from_console_input
 
 def run_game(player1, player2):
@@ -36,16 +36,35 @@ if __name__ == '__main__':
       player2 = Player('Player 2', StoneColor.WHITE)
     )
   elif mode == 2:
-    # TODO ask for difficulty
+    ai_difficulty = take_input_str(
+      'Please select an AI difficulty (easy/medium/hard): ',
+      '',
+      ['easy', 'medium', 'hard']
+    )
+    ai_difficulty = Difficulty[ai_difficulty.upper()]
+
     run_game(
       player1 = Player('Player', StoneColor.BLACK),
-      player2 = AIPlayer('AI', StoneColor.WHITE)
+      player2 = AIPlayer('AI', StoneColor.WHITE, ai_difficulty)
     )
   elif mode == 3:
-    # TODO ask for difficulties
+    ai_difficulty_1 = take_input_str(
+      'Please select a difficulty for the first AI (easy/medium/hard): ',
+      '',
+      ['easy', 'medium', 'hard']
+    )
+    ai_difficulty_2 = take_input_str(
+      'Please select a difficulty for the second AI (easy/medium/hard): ',
+      '',
+      ['easy', 'medium', 'hard']
+    )
+
+    ai_difficulty_1 = Difficulty[ai_difficulty_1.upper()]
+    ai_difficulty_2 = Difficulty[ai_difficulty_2.upper()]
+
     run_game(
-      player1 = AIPlayer('AI 1', StoneColor.BLACK),
-      player2 = AIPlayer('AI 2', StoneColor.WHITE)
+      player1 = AIPlayer('AI 1', StoneColor.BLACK, ai_difficulty_1),
+      player2 = AIPlayer('AI 2', StoneColor.WHITE, ai_difficulty_2)
     )
   elif mode == 4:
     tournament = tournament_from_console_input()
