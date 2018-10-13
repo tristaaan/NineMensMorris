@@ -5,7 +5,7 @@ from .game import Game
 from .player import Player
 from .ai_player import AIPlayer
 from .piece import StoneColor
-
+from .util import take_input_int, take_input_str
 import stone_game.terminalui as ui
 
 class Tournament:
@@ -116,25 +116,23 @@ def tournament_from_console_input():
   adding_players = True
 
   while adding_players:
-    player_type = input('Please select a type for player %d (human/ai): ' % (len(players) + 1,)).strip().lower()
+    player_type = take_input_str(
+      'Please select a type for player %d (human/ai): ' % (len(players) + 1),
+      'Invalid type',
+      ['human', 'ai']
+    ).lower()
 
-    if player_type == 'human' or player_type == 'ai':
-      player_name = ''
-      while player_name == '':
-        player_name = input('Please select a name: ').strip()
-      print()
+    player_name = take_input_str('Please select a name: ', None, None)
+    print()
 
-      players.append(TournamentPlayer(player_type == 'human', player_name))
-    else:
-      continue
+    players.append(TournamentPlayer(player_type == 'human', player_name))
 
     if len(players) >= 2:
       while True:
-        yn = input('Add another player? (y/n) ').strip().lower()
-        if yn == 'y':
+        if take_input_str('Add another player (y/n)? ', None, ['y', 'n']) == 'y':
           print()
           break
-        elif yn == 'n':
+        else:
           adding_players = False
           break
 
