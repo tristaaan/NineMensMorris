@@ -37,8 +37,7 @@ if __name__ == '__main__':
     )
   elif mode == 2:
     ai_difficulty = take_input_str(
-      'Please select an AI difficulty (easy/medium/hard): ',
-      '',
+      'Please select an AI difficulty (easy/medium/hard): ', None,
       ['easy', 'medium', 'hard']
     )
     ai_difficulty = Difficulty[ai_difficulty.upper()]
@@ -49,13 +48,11 @@ if __name__ == '__main__':
     )
   elif mode == 3:
     ai_difficulty_1 = take_input_str(
-      'Please select a difficulty for the first AI (easy/medium/hard): ',
-      '',
+      'Please select a difficulty for the first AI (easy/medium/hard): ', None,
       ['easy', 'medium', 'hard']
     )
     ai_difficulty_2 = take_input_str(
-      'Please select a difficulty for the second AI (easy/medium/hard): ',
-      '',
+      'Please select a difficulty for the second AI (easy/medium/hard): ', None,
       ['easy', 'medium', 'hard']
     )
 

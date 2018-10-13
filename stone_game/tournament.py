@@ -117,8 +117,7 @@ def tournament_from_console_input():
 
   while adding_players:
     player_type = take_input_str(
-      'Please select a type for player %d (human/ai): ' % (len(players) + 1),
-      'Invalid type',
+      'Please select a type for player %d (human/ai): ' % (len(players) + 1), None,
       ['human', 'ai']
     ).lower()
 
@@ -127,8 +126,7 @@ def tournament_from_console_input():
     ai_difficulty = None
     if player_type == 'ai':
       ai_difficulty = take_input_str(
-        'Please select an AI difficulty (easy/medium/hard): ',
-        '',
+        'Please select an AI difficulty (easy/medium/hard): ', None,
         ['easy', 'medium', 'hard']
       )
       ai_difficulty = Difficulty[ai_difficulty.upper()]
