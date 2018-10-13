@@ -1,7 +1,12 @@
 import copy
+from enum import Enum
 from random import randint
 from .heuristics import Heuristics
 
+class Difficulty(Enum):
+    EASY   = 1
+    MEDIUM = 2
+    HARD   = 3
 
 class AI():
     def __init__(self, player, difficulty):
@@ -33,9 +38,9 @@ class AI():
             score += 1
 
         # Adjust score with some random value based on difficulty
-        if self.difficulty == 1:  # Easy difficulty
+        if self.difficulty == Difficulty.EASY:
             score -= randint(1, 30)
-        elif self.difficulty == 2:  # Medium difficulty
+        elif self.difficulty == Difficulty.MEDIUM:
             score -= randint(0, 11)
         return score
 
