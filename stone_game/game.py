@@ -86,9 +86,8 @@ class Game(object):
 
   def move_phase_conditional(self):
     """
-    True until a player has 2 pieces left,
-    no moves are can be made or
-    the draw threshold has been reached.
+    True until a player has 2 pieces left, or
+    a player has no moves, or the turn_counter has exceeded the draw threshold
     """
     current_player = self.rules.active_player()
     current_movables = self.rules.movable_pieces(self.board, current_player)

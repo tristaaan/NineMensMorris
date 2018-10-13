@@ -7,7 +7,7 @@ from .ai import Difficulty
 if __name__ == '__main__':
   results = []
   for i in range(50):
-    p1 = AIPlayer('Player1', StoneColor.BLACK)
+    p1 = Player('Player1', StoneColor.BLACK)
     p2 = AIPlayer('Player2', StoneColor.WHITE)
     g = Game(p1, p2)
     results.append(g.begin())
