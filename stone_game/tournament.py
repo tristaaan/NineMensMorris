@@ -51,10 +51,10 @@ class Tournament:
     winner = None
 
     if player1 == None:
-      print('player 2 wins by walkover')
+      print('%s wins by walkover' % (player2.name,))
       winner = player2
     elif player2 == None:
-      print('player 1 wins by walkover')
+      print('%s wins by walkover' % (player1.name,))
       winner = player1
     else:
       # TODO play match between player1 & player2
@@ -115,11 +115,11 @@ def tournament_from_console_input():
 
     if len(players) >= 2:
       while True:
-        yn = input('Add another player? (y/n) ')
-        if yn == 'y' or yn == 'Y':
+        yn = input('Add another player? (y/n) ').strip().lower()
+        if yn == 'y':
           print()
           break
-        elif yn == 'n' or yn == 'N':
+        elif yn == 'n':
           adding_players = False
           break
 
