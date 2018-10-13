@@ -1,6 +1,6 @@
 from .player import Player
 from .piece import StoneColor
-from .ai import AI
+from .ai import AI, Difficulty
 
 class AIPlayer(Player):
   """
@@ -10,7 +10,7 @@ class AIPlayer(Player):
   reserves: an array of Pieces, initialized in the constructor
   """
 
-  def __init__(self, name, icon, difficulty=3):
+  def __init__(self, name, icon, difficulty=Difficulty.HARD):
     super().__init__(name, icon)
     self.difficulty = difficulty
     self.engine = AI(self, difficulty)

@@ -2,12 +2,13 @@ from .game import Game
 from .player import Player
 from .ai_player import AIPlayer
 from .piece import StoneColor
+from .ai import Difficulty
 
 if __name__ == '__main__':
   results = []
   for i in range(50):
     p1 = AIPlayer('Player1', StoneColor.BLACK)
-    p2 = AIPlayer('Player2', StoneColor.WHITE, difficulty=1)
+    p2 = AIPlayer('Player2', StoneColor.WHITE)
     g = Game(p1, p2)
     results.append(g.begin())
 
