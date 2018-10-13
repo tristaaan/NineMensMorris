@@ -216,7 +216,7 @@ def draw_board(board):
 
             icon_x = 17 + 2 * d * x
             icon_y = 9 + d * y
-            draw_string(icon_x, icon_y, piece.icon)
+            draw_string(icon_x, icon_y, piece.icon.value)
 
 def _expand_buffer(new_w, new_h):
     w = len(_buffer[0]) if _buffer else 0

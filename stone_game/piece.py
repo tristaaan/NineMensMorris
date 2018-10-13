@@ -1,6 +1,7 @@
+from enum import Enum
 
 
-class StoneState(object):
+class StoneState(Enum):
   """
   Constants for the stone states
   """
@@ -8,6 +9,9 @@ class StoneState(object):
   IN_PLAY = 'IN_PLAY'
   CAPTURED = 'CAPTURED'
 
+class StoneColor(Enum):
+  BLACK='●'
+  WHITE='○'
 
 class Piece(object):
   """
