@@ -1,7 +1,11 @@
 import math
 import random
 
+from .game import Game
 from .player import Player
+from .ai_player import AIPlayer
+from .piece import StoneColor
+
 import stone_game.terminalui as ui
 
 class Tournament:
@@ -57,11 +61,22 @@ class Tournament:
       print('%s wins by walkover' % (player1.name,))
       winner = player1
     else:
-      # TODO play match between player1 & player2
-      if input('winner (1/2): ') == '1':
+      game = Game(
+        player1.to_game_player(StoneColor.BLACK),
+        player2.to_game_player(StoneColor.WHITE)
+      )
+      game_winner = game.begin()
+
+      if game_winner == 0:
+        print('Deciding winner by coin toss...')
+        game_winner = random.randint(1, 2)
+
+      if game_winner == 1:
         winner = player1
-      else:
+      elif game_winner == 2:
         winner = player2
+
+      print('%s has won the game!' % (winner.name,))
 
     print()
 
@@ -88,7 +103,7 @@ class Tournament:
       self.draw()
       print()
 
-    print('Winner: %s' % (self.winner().name,))
+    print('%s has won the tournament!' % (self.winner().name,))
 
   def draw(self):
     ui.clear()
@@ -129,6 +144,12 @@ class TournamentPlayer:
   def __init__(self, is_human, name):
     self.is_human = is_human
     self.name = name
+  
+  def to_game_player(self, color):
+    if self.is_human:
+      return Player(self.name, color)
+    else:
+      return AIPlayer(self.name, color)
 
   def __str__(self):
     return self.name
