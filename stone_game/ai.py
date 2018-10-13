@@ -4,16 +4,30 @@ from random import randint
 from .heuristics import Heuristics
 
 class Difficulty(Enum):
+    """
+    Difficulty levels
+    """
     EASY   = 1
     MEDIUM = 2
     HARD   = 3
 
 class AI():
+    """
+    The core of the Engine component
+    difficulty: a difficulty level
+    heuristics: a heuristics object to evaluate the board
+    """
     def __init__(self, player, difficulty):
         self.difficulty = difficulty
         self.heuristics = Heuristics(player)
 
     def _scoring(self, board, pos, player):
+        """
+        Score a position
+        board: board
+        pos: position to inspect
+        player: player making the move
+        """
         score = 0
         # score mill creation
         if self.heuristics.creates_mill(board, pos):
@@ -45,6 +59,11 @@ class AI():
         return score
 
     def place_stone(self, board, player):
+        """
+        Find the best placement
+        board: board
+        player: the player which is placing
+        """
         bestPosition = None
         best_score = -100
         for n in range(1, 25):
@@ -56,6 +75,14 @@ class AI():
         return bestPosition
 
     def move_stone(self, board, player, movable, move_map):
+        """
+        Find the best stone to move and where to move it to,
+        returns a tuple (at, to)
+        board: board
+        player: the player which is moving
+        movable: moveable stones
+        move_map: a dict of {stone: [moves]}
+        """
         test_board = copy.deepcopy(board)
         best_score = -100
         best_new_position = None
@@ -73,6 +100,12 @@ class AI():
         return (best_movable_stone, best_new_position)
 
     def steal_stone(self, board, stealable, opponent):
+        """
+        Find the best stone to steal
+        board: board
+        stealable: a list of stealable stones
+        opponent: the opponent
+        """
         test_board = copy.deepcopy(board)
         best_position = None
         best_score = -100

@@ -23,7 +23,9 @@ class Player(object):
 
   def make_placement(self, open_spots, board=None):
     """
-    Given a board, return a possible placement
+    Place a stone
+    open_spots: possible placements
+    board: board, used in AIPlayer
     """
     return (self.inactive_piece(),
       self.take_input('Place piece: ',          \
@@ -32,8 +34,10 @@ class Player(object):
       )
   def make_move(self, possible_positons, moves_map, board=None):
     """
-    Make a move for a stone
-    possible_moves: a list of possible positions
+    Make a move for a stone, returns a tuple (at, to)
+    possible_positons: a list of possible stones to move
+    moves_map: a dict of {stone: [moves]}
+    board: board, used in AIPlayer
     """
     at = self.take_input('Move piece at: ', \
                          'You cannot move that piece',      \
@@ -49,6 +53,8 @@ class Player(object):
     """
     Choose a piece to steal
     stealable: a list of stealable positions
+    opponent: the opposing player, used in AIPlayer
+    board: board, used in AIPlayer
     """
     return self.take_input(                          \
           'Which piece would you like to remove?: ', \
