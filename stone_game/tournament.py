@@ -9,6 +9,18 @@ from .util import take_input_int, take_input_str
 import stone_game.terminalui as ui
 
 class Tournament:
+  """
+  A single-elimination tournament between any number of players.
+
+  num_rounds:     number of rounds in the tournament
+  rounds_players: keeps track of the players competing in each game
+                  the structure of rounds_players is a 2d-array
+                  the outer array contains rounds (n-th finals, ..., semi finals, finals, winner)
+                  the inner arrays contains the players in a round from top to bottom
+  current_round:  keeps track of the first round that has unplayed games in it
+  current_game:   keeps track of the first game within the current round that is unplayed
+  """
+
   def __init__(self, players):
     self.num_rounds = math.ceil(math.log2(len(players)))
 
@@ -40,12 +52,21 @@ class Tournament:
     self.current_game = 0
 
   def num_games_in_round(self, round):
+    """
+    The number of games in the given round of the tournament.
+    """
     return 2 ** (self.num_rounds - round - 1)
 
   def num_players_in_round(self, round):
+    """
+    The number of players in the given round of the tournament.
+    """
     return 2 ** (self.num_rounds - round)
 
   def play_next_game(self):
+    """
+    Plays the next unplayed game in the tournament.
+    """
     if self.current_round >= self.num_rounds:
       raise Exception("All rounds have already been played. ")
 
@@ -89,12 +110,23 @@ class Tournament:
       self.current_round += 1
 
   def is_finished(self):
+    """
+    Wether or not the tournament is completed.
+    """
     return self.current_round >= self.num_rounds
 
   def winner(self):
+    """
+    The winning player of the tournament.
+    Returns `None` if the tournament isn't completed.
+    """
     return self.rounds_players[-1][0]
 
   def begin(self):
+    """
+    Plays the entire tournament, or the rest of the tournament
+    if it has already been partially played.
+    """
     self.draw()
     print()
 
@@ -106,11 +138,20 @@ class Tournament:
     print('%s has won the tournament!' % (self.winner().name,))
 
   def draw(self):
+    """
+    Draws the tournament bracket to the console.
+    """
     ui.clear()
     ui.draw_tournament(self)
     ui.output_buffer()
 
 def tournament_from_console_input():
+  """
+  Creates a tournament using input from the console.
+  Repeats asking for player types (human/ai),
+  player names,
+  and ai difficulty (if the type is ai).
+  """
   players = []
 
   adding_players = True
@@ -151,12 +192,24 @@ def tournament_from_console_input():
   return Tournament(players)
 
 class TournamentPlayer:
+  """
+  A competitor within a tournament.
+  """
+
   def __init__(self, is_human, name, difficulty = None):
+    """
+    is_human:   true if this player is human, false if it's an AI
+    name:       the players name
+    difficulty: the difficulty of this player (only if it's an AI)
+    """
     self.is_human = is_human
     self.name = name
     self.difficulty = difficulty
   
   def to_game_player(self, color):
+    """
+    Creates a Player or AIPlayer with the same name as this TournamentPlayer.
+    """
     if self.is_human:
       return Player(self.name, color)
     else:
