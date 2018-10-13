@@ -39,10 +39,6 @@ class AI():
             score -= randint(0, 11)
         return score
 
-    def _bestPlacement(self, color, phase):
-        # TODO
-        pass
-
     def place_stone(self, board, player):
         bestPosition = None
         best_score = -100
