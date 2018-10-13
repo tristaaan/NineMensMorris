@@ -2,6 +2,7 @@
 
 # hard coded, used in heuristics too
 # keep the indexing pattern in-line with the board
+# An array of 3 length arrays which are mills on the board
 mills = [
   [1, 2,  3], [3, 4, 5 ], [5,  6, 7], [7, 8, 1], # outer
   [9, 10,11], [11,12,13], [13,14,15], [15,16,9], # middle
@@ -12,7 +13,6 @@ mills = [
 class Rules(object):
   """
   Rules and game mechanics for the Stone Game
-  mills: An array of 3 length arrays which are mills on the board
   turn_counter: Keeping track which turn it is
   player1: Player 1
   player2: Player 2
