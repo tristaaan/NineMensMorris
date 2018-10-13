@@ -1,6 +1,6 @@
 from .piece import Piece, StoneState
 from .util import take_input
-import pdb
+
 
 class Player(object):
   """
@@ -43,7 +43,7 @@ class Player(object):
     at = take_input('Move piece at: ',            \
                     'You cannot move that piece', \
                     possible_positions)
-    # pdb.set_trace()
+
     print('Possible moves: ', moves_map[at])
     to = take_input('Move piece to: ',       \
                     'You cannot move there', \
