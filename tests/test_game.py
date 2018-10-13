@@ -4,11 +4,13 @@ from unittest.mock import patch
 from stone_game.game import Game
 from stone_game.board import Board
 from stone_game.player import Player
-from stone_game.piece import StoneState
+from stone_game.piece import StoneState, StoneColor
 
 class GameTestCase(unittest.TestCase):
   def setUp(self):
-    self.game = Game()
+    p1 = Player('Player1', StoneColor.BLACK)
+    p2 = Player('Player2', StoneColor.WHITE)
+    self.game = Game(p1, p2)
 
   def testEndOfPlacePhase(self):
     for i in range(0,17):
@@ -30,7 +32,7 @@ class GameTestCase(unittest.TestCase):
 
 
   def testConditionalWhereNotEnoughPieces(self):
-    player1 = self.game.mechanics.active_player()
+    player1 = self.game.rules.active_player()
     stones = player1.remaining_unplaced()
     self.game.board.add_piece(stones[0], 1)
     self.game.board.add_piece(stones[1], 2)
@@ -45,14 +47,14 @@ class GameTestCase(unittest.TestCase):
 
   def testConditionalWhereNoMoves(self):
     # populate a board with cornered pieces
-    player1 = self.game.mechanics.active_player()
+    player1 = self.game.rules.active_player()
     stones = player1.remaining_unplaced()
     self.game.board.add_piece(stones[0], 1)
     self.game.board.add_piece(stones[1], 3)
     self.game.board.add_piece(stones[2], 7)
     self.game.board.add_piece(stones[3], 5)
 
-    player2 = self.game.mechanics.inactive_player()
+    player2 = self.game.rules.inactive_player()
     stones = player2.remaining_unplaced()
     self.game.board.add_piece(stones[0], 2)
     self.game.board.add_piece(stones[1], 4)

@@ -47,6 +47,9 @@ class Board(object):
     self.add_node(21, [20,22])
     self.add_node(23, [22,24])
 
+  def __getitem__(self, key):
+    return self.nodes[key]
+
   def add_piece(self, piece, to):
     """
     Adds a piece to the board
@@ -110,6 +113,7 @@ class Board(object):
     """
     Print out the board
     """
+    ui.clear()
     ui.draw_board(self)
     ui.output_buffer()
 

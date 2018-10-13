@@ -1,4 +1,8 @@
 from .game import Game
+from .player import Player
+from .ai_player import AIPlayer
+from .piece import StoneColor
+from .ai import Difficulty
 
 from .tournament import tournament_from_console_input
 

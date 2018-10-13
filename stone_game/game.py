@@ -1,76 +1,81 @@
 from .board import Board
-from .mechanics import Mechanics
+from .rules import Rules
 from .player import Player
 
 
 class Game(object):
 
-  def __init__(self, player1 = Player('Player 1', '●'), player2 = Player('Player 2', '○')):
+  # 18 moves for placing, and 50 after.
+  draw_threshold = 68
+
+  def __init__(self, player1, player2):
     self.player1 = player1
     self.player2 = player2
 
     self.board = Board()
-    self.mechanics = Mechanics(self.player1, self.player2)
+    self.rules = Rules(self.player1, self.player2)
 
   def begin(self):
     # PLACE PHASE
-    active_player = self.mechanics.active_player()
     self.board.draw()
+
+    self.place_phase()
+    self.move_phase()
+
+    if self.rules.turn_counter >= self.draw_threshold:
+      return 0
+
+    print('----- GAME OVER -----')
+    print('\n%s is victorious!\n' % self.rules.inactive_player().name)
+    return ((self.rules.turn_counter+1) % 2) + 1
+
+  def place_phase(self):
+    active_player = self.rules.active_player()
     while self.place_phase_conditional():
-      print('---- Turn %d ----' % self.mechanics.turn_counter)
-      active_player = self.mechanics.active_player()
-      current_piece = active_player.inactive_piece()
-      print('%s\'s turn' % active_player)
-      spot = self.take_input('Place piece: ',          \
-                             'You cannot place there', \
-                             self.board.open_spots())
+      print('---- Turn %d ----' % self.rules.turn_counter)
+      possible_placements = self.board.open_spots()
+      active_player = self.rules.active_player()
+      (current_piece, spot) = active_player.make_placement(
+        possible_placements, board=self.board)
       # Place piece, steal if a mill was formed
-      millFormed = self.mechanics.place_piece(self.board, current_piece,spot)
+      millFormed = self.rules.place_piece(self.board, current_piece, spot)
       self.board.draw()
       if millFormed:
         print('A mill was created!')
-        pieces_to_steal = self.mechanics.stealable_pieces(self.board)
+        pieces_to_steal = self.rules.stealable_pieces(self.board)
         print("Remove one of the following pieces:", pieces_to_steal)
-        piece_to_remove = self.take_input(           \
-          'Which piece would you like to remove?: ', \
-          'You cannot remove that piece',            \
-          pieces_to_steal)
-        self.mechanics.steal_piece(piece_to_remove, self.board)
+        piece_to_remove = active_player.make_steal_move(pieces_to_steal,
+          board=self.board, opponent=self.rules.inactive_player())
+        self.rules.steal_piece(piece_to_remove, self.board)
         self.board.draw()
 
-    # MOVE PHASE
-    print('move phase')
+  def move_phase(self):
     while self.move_phase_conditional():
-      active_player = self.mechanics.active_player()
-      possible_pieces = self.mechanics.movable_pieces(self.board, active_player)
+      active_player = self.rules.active_player()
+      possible_pieces = self.rules.movable_pieces(self.board, active_player)
       possible_positions = [p.position for p in possible_pieces]
 
-      print('---- Turn %d ----' % self.mechanics.turn_counter)
+      print('---- Turn %d ----' % self.rules.turn_counter)
       print('Available moves: ', possible_positions)
       print('%s\'s turn' % active_player)
 
-      at = self.take_input('Move piece at: ', 'You cannot move that piece',
-                           possible_positions)
-      possible_moves = self.mechanics.moves_for_piece(self.board, at)
-      print('Possible moves: ', possible_moves)
-      to = self.take_input('Move piece to: ', 'You cannot move there',
-                           possible_moves)
+      move_map = {}
+      for s in possible_positions:
+        move_map[s] = self.rules.moves_for_piece(self.board, s)
+
+      (at,to) = active_player.make_move(possible_positions, move_map, board=self.board)
+
       # Move piece, steal if a mill was formed
-      millFormed = self.mechanics.move_piece(self.board, at, to)
+      millFormed = self.rules.move_piece(self.board, at, to)
       self.board.draw();
       if millFormed:
         print('A mill was created!')
-        pieces_to_steal = self.mechanics.stealable_pieces(self.board)
+        pieces_to_steal = self.rules.stealable_pieces(self.board)
         print("Remove one of the following pieces:", pieces_to_steal)
-        piece_to_remove = self.take_input(
-          'Which piece would you like to remove?: ', \
-          'You cannot remove that piece',            \
-          pieces_to_steal)
-        self.mechanics.steal_piece(piece_to_remove, self.board)
+        piece_to_remove = active_player.make_steal_move(pieces_to_steal,
+          board=self.board, opponent=self.rules.inactive_player())
+        self.rules.steal_piece(piece_to_remove, self.board)
         self.board.draw()
-
-    print('----- GAME OVER -----')
-    print('\n%s is victorious!\n' % self.mechanics.inactive_player().name)
 
   def place_phase_conditional(self):
     """
@@ -81,22 +86,12 @@ class Game(object):
 
   def move_phase_conditional(self):
     """
-    True until a player has 2 pieces left, or
+    True until a player has 2 pieces left,
+    no moves are can be made or
+    the draw threshold has been reached.
     """
-    current_player = self.mechanics.active_player()
-    current_movables = self.mechanics.movable_pieces(self.board, current_player)
+    current_player = self.rules.active_player()
+    current_movables = self.rules.movable_pieces(self.board, current_player)
     return len(current_player.remaining_in_play()) > 2 and \
-           len(current_movables) > 0
-
-  def take_input(self, text, error, valid_ints):
-    try:
-      inp = int(input(text))
-      if inp in valid_ints:
-        return inp
-      raise NameError(error)
-    except NameError:
-      print(error)
-    except ValueError:
-      print('Thats not a number')
-
-    return self.take_input(text, error, valid_ints)
+           len(current_movables) > 0 and \
+           self.rules.turn_counter <= self.draw_threshold
