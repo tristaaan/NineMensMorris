@@ -1,5 +1,5 @@
 from .piece import Piece, StoneState
-from .util import take_input
+from .util import take_input_int
 
 
 class Player(object):
@@ -29,7 +29,7 @@ class Player(object):
     board: board, used in AIPlayer
     """
     return (self.inactive_piece(),
-      take_input('Place piece: ',
+      take_input_int('Place piece: ',
                  'You cannot place there',
                  open_spots)
       )
@@ -40,12 +40,12 @@ class Player(object):
     moves_map: a dict of {stone: [moves]}
     board: board, used in AIPlayer
     """
-    at = take_input('Move piece at: ',            \
+    at = take_input_int('Move piece at: ',            \
                     'You cannot move that piece', \
                     possible_positions)
 
     print('Possible moves: ', moves_map[at])
-    to = take_input('Move piece to: ',       \
+    to = take_input_int('Move piece to: ',       \
                     'You cannot move there', \
                     moves_map[at])
     return (at, to)
@@ -57,7 +57,7 @@ class Player(object):
     opponent: the opposing player, used in AIPlayer
     board: board, used in AIPlayer
     """
-    return take_input(                           \
+    return take_input_int(                           \
       'Which piece would you like to remove?: ', \
       'You cannot remove that piece',            \
       stealable)

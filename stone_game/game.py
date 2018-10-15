@@ -26,7 +26,6 @@ class Game(object):
       return 0
 
     print('----- GAME OVER -----')
-    print('\n%s is victorious!\n' % self.rules.inactive_player().name)
     return ((self.rules.turn_counter+1) % 2) + 1
 
   def place_phase(self):
