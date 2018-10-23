@@ -92,4 +92,3 @@ class RulesTestCase(unittest.TestCase):
     self.assertTrue(self.rules.move_piece(self.board, 4, 3))
     # it is still player1's turn to steal a piece
     self.assertEqual(self.rules.turn_counter, 0, 'the turn should not change after moving into a mill')
-
