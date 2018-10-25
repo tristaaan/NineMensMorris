@@ -111,7 +111,7 @@ class Tournament:
 
   def is_finished(self):
     """
-    Wether or not the tournament is completed.
+    Whether or not the tournament is completed.
     """
     return self.current_round >= self.num_rounds
 
@@ -205,7 +205,7 @@ class TournamentPlayer:
     self.is_human = is_human
     self.name = name
     self.difficulty = difficulty
-  
+
   def to_game_player(self, color):
     """
     Creates a Player or AIPlayer with the same name as this TournamentPlayer.

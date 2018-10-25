@@ -73,11 +73,11 @@ class BoardTestCase(unittest.TestCase):
     q = board.get_pieces([2, 4])
     self.assertEqual(q, [stones[1], None])
 
-  def open_spots(self):
+  def testOpenSpots(self):
     board = Board()
     stones = self.create_pieces(22)
-    for s in stones:
-      board.add_piece(s)
+    for i, s in enumerate(stones):
+      board.add_piece(s, i+1)
 
     open_spots = board.open_spots()
-    assertEqual(open_spots, [23,24])
+    self.assertEqual(open_spots, [23,24])

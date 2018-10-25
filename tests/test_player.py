@@ -19,7 +19,12 @@ class PlayerTestCase(unittest.TestCase):
     rem = player.remaining_in_play()
     self.assertEqual(len(rem), 0, 'new player has pieces in play')
 
-    for i in range(1,10):
+    piece = player.inactive_piece()
+    board.add_piece(piece, 1)
+    rem = player.remaining_unplaced()
+    self.assertEqual(len(rem), 8, 'a player has the wrong count of unplaced pieces')
+
+    for i in range(2,10):
       piece = player.inactive_piece()
       board.add_piece(piece, i)
 

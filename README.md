@@ -1,7 +1,8 @@
 # StoneGame
 
+An implementation of [Nine-Men's Morris](https://en.wikipedia.org/wiki/Nine_men%27s_morris).
 
-## Setup
+## Getting Started
 
 From the project directory run:
 
@@ -35,12 +36,3 @@ Run an individual test file:
 ```sh
 python -m unittest tests/test_my_module.py
 ```
-
-## Style
-
-Hundreds of style rules could be imposed, the ones that matter, in order of importance, are:
-
-- 2 spaces per indentation level
-- `lowercase_snake_case` for variables and method names
-- `TitleCaseNames` for classes
-- `ALL_CAPS` for constants

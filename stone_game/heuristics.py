@@ -3,6 +3,7 @@ import copy
 from .rules import mills
 from .piece import Piece
 
+
 class Heuristics(object):
 
   def __init__(self, player):
