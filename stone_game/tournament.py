@@ -12,7 +12,7 @@ class Tournament:
   """
   A single-elimination tournament between any number of players.
 
-  num_rounds:     number of rounds in the tournament, this is 0 indexed
+  num_rounds:     number of rounds in the tournament
   rounds_players: keeps track of the players competing in each game
                   the structure of rounds_players is a 2d-array
                   the outer array contains rounds (n-th finals, ..., semi finals, finals, winner)
