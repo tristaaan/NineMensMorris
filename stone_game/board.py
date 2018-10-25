@@ -116,12 +116,3 @@ class Board(object):
     ui.clear()
     ui.draw_board(self)
     ui.output_buffer()
-
-  def piece_str(self, at):
-    """
-    Print the icon of just a single piece at a node
-    at: the name of the node
-    """
-    if self.nodes[at].piece == None:
-      return '☐'
-    return self.nodes[at].piece.icon
